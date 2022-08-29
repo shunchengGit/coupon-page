@@ -60,8 +60,8 @@
             // 券费
             var couponDiff = couponCount - returnCoupon;
             var money = parseInt(couponDiff * 0.47);
-            var profit = parseInt(couponDiff * 0.3);
-            var money = money > profit + 50 ? money : profit + 50;
+            var cost = parseInt(couponDiff * 0.25);
+            var money = money > cost + 55 ? money : cost + 55;
             document.getElementById("money").value=money;
 
             var des1 = couponCount + "的券，在"+location+"使用，费用"+money+"，返券"+returnCoupon+"。";
@@ -87,15 +87,26 @@
               </li>
               <li>
                 <p class="bg-danger">
-                  本券仅限用于北京九十九顶毡房餐饮消费区，午餐散台，包间都可使用，晚餐仅限散台使用，法定节假日不可使用
+                  本券仅限用于北京九十九顶毡房餐饮消费区，午餐散台，包间都可使用，晚餐仅限散台使用，法定节假日不可使用(法定节假日指中秋节、国庆节等，不包括普通周末)
                 </p>
               </li>
+
+              <li>
+                <p class="bg-danger">
+                使用本券时，不得超过当餐消费菜品总额的50%
+               </p>
+              </li>
+
               <li>
                 <p class="bg-info">
                  温馨提示：现场消费时，如果买的券不够可以叫闪送给你再送几张，应该能再节省点
                 </p>
               </li>
-              
+              <li>
+                <p class="bg-info">
+                其他疑问拨打商家电话：010-62991888（清河店），010-68166999（阜石店）
+                </p>
+              </li>
               <li>
                 <p class="bg-warning">
                   本券不可用于烟、酒消费，不兑换现金、不找零、不开发票
@@ -105,11 +116,6 @@
                 <p class="bg-warning">
                 本券当餐不可使用，不可与其他优惠同时使用，限堂食不打包
                 </p>
-              </li>
-              <li>
-                <p class="bg-warning">
-                使用本券时，不得超过当餐消费菜品总额的50%
-               </p>
               </li>
               <li>
                 <p class="bg-warning">
