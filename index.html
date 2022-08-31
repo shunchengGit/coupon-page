@@ -37,40 +37,84 @@
     <script>
         calc = function ()
         {
-            var couponCount = parseInt(parseInt(document.getElementById("couponCount").value) / 50) * 50;
-            document.getElementById("couponCount").value=couponCount;
-            var location = document.getElementById("privateRoom").checked ? "包间" : "大厅";
-           
-            // 返券
-            var returnCoupon = 0;
-            tmpCouponCount = parseInt(couponCount / 100) * 100;
-            if (location === '大厅') {
-                returnCoupon = tmpCouponCount * 0.8;
-                returnCoupon = returnCoupon > 480 ? 480 : returnCoupon;
+            var consumption = parseInt(document.getElementById("consumption").value);
+
+            var location = "";
+            document.getElementsByName("location").forEach(function (item) {
+                if (item.checked) {
+                    location = item.id;
+                }
+            });
+
+            var time = "";
+            document.getElementsByName("time").forEach(function (item) {
+                if (item.checked) {
+                  time = item.id;
+                }
+            });
+            
+            var result;
+            if (location === "location_unknown" && time === 'time_in5days') {
+              var r1 = calcImpl(consumption, "location_hall", time);
+              var r2 = calcImpl(consumption, "location_privateRoom", time);
+              var result = r1;
+              result.des = result.des + "<br/><br/>" + r2.des;
             } else {
-                returnCoupon = tmpCouponCount * 0.5;
-                returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
+              result = calcImpl(consumption, location, time);
             }
-            document.getElementById("returnCoupon").value=returnCoupon;
 
-            // 押金
-            var deposit = returnCoupon * 0.4;
-            document.getElementById("deposit").value = deposit;
+            document.getElementById("couponCount").value=result.couponCount;
+            document.getElementById("returnCoupon").value=result.returnCoupon;
+            document.getElementById("deposit").value = result.deposit;
+            document.getElementById("money").value=result.money;
+            document.getElementById("des").innerHTML=result.des;
+        }
 
-            // 券费
-            var couponDiff = couponCount - returnCoupon;
-            var money = parseInt(couponDiff * 0.47);
-            var cost = parseInt(couponDiff * 0.25);
-            var money = money > cost + 55 ? money : cost + 55;
-            document.getElementById("money").value=money;
+        calcImpl = function (consumption, location, time)
+        {
+          if (time === "time_moreThan5days") {
+            return {
+              des : '请5天之内再来交易...',
+            }
+          }
 
-            var des1 = couponCount + "的券，在"+location+"使用，费用"+money+"，返券"+returnCoupon+"，押金"+deposit+"。";
-            var des2 = "你在闲鱼建一个"+returnCoupon+"返券，"+deposit+"元的商品，我拍一下。";
-            var des3 = "我在闲鱼建一个"+couponCount+"券，"+(money+deposit)+"元的商品，你拍一下。";
-            var des4 = "我收到你的返券，我们同时确认两笔交易。";
-            var des5 = "双向确保，比较公平。";
-            var des6 = "（策略都算好了就不要跟我讲价了吧，已经是底价，否则建议看看市面上有没有更加合适你的价格，谢谢你~）";
-            document.getElementById("des").innerHTML=des1+des2+des3+des4+des5+des6;
+          var couponCount = parseInt(consumption / 2 / 50) * 50;
+          var returnCoupon = 0;
+          moneyIndex = parseInt((consumption - couponCount) / 100) * 100;
+          if (location === 'location_hall') {
+              returnCoupon = moneyIndex * 0.8;
+              returnCoupon = returnCoupon > 480 ? 480 : returnCoupon;
+          } else {
+              returnCoupon = moneyIndex * 0.5;
+              returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
+          }
+
+          // 押金
+          var deposit = returnCoupon * 0.4;
+
+          // 券费
+          var couponDiff = couponCount - returnCoupon;
+          var money = parseInt(couponDiff * 0.47);
+          var cost = parseInt(couponDiff * 0.25);
+          var money = money > cost + 55 ? money : cost + 55;
+
+          var locationDes = location === 'location_hall' ? '大厅' : '包间';
+          var des0 = "在"+locationDes+"点"+consumption+"元的菜，"
+          var des1 = "用"+couponCount + "的券，收费"+money+"，返券"+returnCoupon+"，押金"+deposit+"。";
+          var des2 = "你在闲鱼建一个"+returnCoupon+"返券，"+deposit+"元的商品，我拍一下。";
+          var des3 = "我在闲鱼建一个"+couponCount+"券，"+(money+deposit)+"元的商品，你拍一下。";
+          var des4 = "我收到你的返券，我们同时确认两笔交易。";
+          var des5 = "双向确保，比较公平。";
+          var des6 = "策略都算好了就不要再讲价了吧，或者看看市面上有没有更加合适你的价格，谢谢你~";
+          var des = des0+des1+des2+des3+des4+des5+des6;
+
+          return {
+            couponCount,
+            returnCoupon,
+            money,
+            deposit,
+            des,
+          }
         }
     </script>
 
@@ -126,14 +170,66 @@
           </p>
         </div>   
       </div>
+
+      <div class="row" style="padding-top: 20px;">
+        <div class="col-md-1">
+          <label>在哪里吃</label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" checked="checked" name="location" id="location_privateRoom">  包间
+        </label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" name="location" id="location_hall">  大厅
+        </label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" name="location" id="location_unknown"> 不确定
+        </label>
+      </div>
+      </div>
+
+      <div class="row" style="padding-top: 20px;">
+        <div class="col-md-1">
+          <label>啥时候吃</label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" checked="checked" name="time" id="time_in5days">  5天及之内
+        </label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" name="time" id="time_moreThan5days"> 5天以上
+        </label>
+      </div>
+      </div>
+
+      <div class="row" style="padding-top: 20px;">
+        <div class="col-md-1">
+            <label>点多少菜</label> 
+        </div>
+        <div class="col-md-2">
+          <input type="number" class="form-control" id= "consumption" value="2000">
+        </div>
+      </div>
       
       <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
-            <label>券数</label> 
+            <label>用券</label> 
         </div>
         <div class="col-md-2">
-          <input type="number" class="form-control" id= "couponCount" value="1000">
+          <fieldset disabled>
+            <input type="number" class="form-control" id= "couponCount">
+          </fieldset>
+          
         </div>
+      </div>
+      
+      <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
           <label>返券</label> 
         </div>
@@ -143,23 +239,11 @@
           </fieldset>
         </div>
       </div>
-      
+
+
       <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
-          <label>位置</label>
-        </div>
-        <div class="col-md-1">
-          <label class="radio-inline">
-            <input type="radio" checked="checked" name="location" id="privateRoom">  包间
-        </label>
-        </div>
-        <div class="col-md-1">
-          <label class="radio-inline">
-            <input type="radio" name="location">  大厅
-        </label>
-        </div>
-        <div class="col-md-1">
-          <label>费用</label> 
+          <label>收费</label> 
         </div>
         <div class="col-md-2">
           <fieldset disabled>
