@@ -64,6 +64,7 @@
             }
 
             document.getElementById("couponCount").value=result.couponCount;
+            document.getElementById("cash").value= result.cash;
             document.getElementById("returnCoupon").value=result.returnCoupon;
             document.getElementById("deposit").value = result.deposit;
             document.getElementById("money").value=result.money;
@@ -78,31 +79,34 @@
             }
           }
 
+          // 用券
           var couponCount = parseInt(consumption / 2 / 50) * 50;
+          // 现金
+          var cash = consumption - couponCount;
+          // 返券
           var returnCoupon = 0;
-          moneyIndex = parseInt((consumption - couponCount) / 100) * 100;
+          cashIndex = parseInt(cash / 100) * 100;
           if (location === 'location_hall') {
-              returnCoupon = moneyIndex * 0.8;
+              returnCoupon = cashIndex * 0.8;
               returnCoupon = returnCoupon > 480 ? 480 : returnCoupon;
           } else {
-              returnCoupon = moneyIndex * 0.5;
+              returnCoupon = cashIndex * 0.5;
               returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
           }
-
           // 押金
-          var deposit = returnCoupon * 0.4;
-
+          var deposit = returnCoupon * 0.32;
           // 券费
           var couponDiff = couponCount - returnCoupon;
           var money = parseInt(couponDiff * 0.47);
-          var cost = parseInt(couponDiff * 0.25);
-          var money = money > cost + 55 ? money : cost + 55;
+          var minMoney = parseInt(couponDiff * 0.25) + 55;
+          var money = money > minMoney ? money : minMoney;
 
           var locationDes = location === 'location_hall' ? '大厅' : '包间';
-          var des0 = "在"+locationDes+"点"+consumption+"元的菜，"
+          var timeDes = time === 'time_in5days' ? '5天内' : '5天以上';
+          var des0 = timeDes + "，在"+locationDes+"，点"+consumption+"元及以上的菜，"
           var des1 = "用"+couponCount + "的券，收费"+money+"，返券"+returnCoupon+"，押金"+deposit+"。";
-          var des2 = "你在闲鱼建一个"+returnCoupon+"返券，"+deposit+"元的商品，我拍一下。";
-          var des3 = "我在闲鱼建一个"+couponCount+"券，"+(money+deposit)+"元的商品，你拍一下。";
+          var des2 = "我在闲鱼建一个"+couponCount+"券，"+(money+deposit)+"元（收费+押金）的商品，你拍一下。";
+          var des3 = "你在闲鱼建一个"+returnCoupon+"返券，"+deposit+"元（押金返还）的商品，我拍一下。";
           var des4 = "我收到你的返券，我们同时确认两笔交易。";
           var des5 = "双向确保，比较公平。";
           var des6 = "策略都算好了就不要再讲价了吧，或者看看市面上有没有更加合适你的价格，谢谢你~";
@@ -110,6 +114,7 @@
 
           return {
             couponCount,
+            cash,
             returnCoupon,
             money,
             deposit,
@@ -145,10 +150,14 @@
                 使用本券时，不得超过当餐消费菜品总额的50%
                </p>
               </li>
-
               <li>
                 <p class="bg-info">
-                 现场消费时，如果买的券不够可以叫闪送给你再送几张，应该能再节省点
+                 返券规则：包间每消费100元现金，返回50券，1000券封顶；大厅每消费100元现金，返80券，480券封顶
+                </p>
+              </li>
+              <li>
+                <p class="bg-info">
+                 现场消费时，如果买的券不够可以叫闪送给你再送几张，应该能再节省点。我的微信号，UnderPinetree
                 </p>
               </li>
               <li>
@@ -219,13 +228,24 @@
       
       <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
-            <label>用券</label> 
+            <label>优惠券消耗</label> 
         </div>
         <div class="col-md-2">
           <fieldset disabled>
             <input type="number" class="form-control" id= "couponCount">
           </fieldset>
           
+        </div>
+      </div>
+
+      <div class="row" style="padding-top: 20px;">
+        <div class="col-md-1">
+          <label>现金消耗</label> 
+        </div>
+        <div class="col-md-2">
+          <fieldset disabled>
+            <input type="number" class="form-control" id= "cash">
+          </fieldset>
         </div>
       </div>
       
