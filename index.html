@@ -57,8 +57,8 @@
             if (location === "location_unknown" && time === 'time_in5days') {
               var r1 = calcImpl(consumption, "location_hall", time);
               var r2 = calcImpl(consumption, "location_privateRoom", time);
-              var result = r1;
-              result.des = result.des + "<br/><br/>" + r2.des;
+              var result = {};
+              result.des = r1.des + "<br/>" + r2.des;
             } else {
               result = calcImpl(consumption, location, time);
             }
@@ -94,7 +94,7 @@
               returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
           }
           // 押金
-          var deposit = returnCoupon * 0.32;
+          var deposit = returnCoupon * 0.35;
           // 券费
           var couponDiff = couponCount - returnCoupon;
           var money = parseInt(couponDiff * 0.47);
@@ -107,10 +107,12 @@
           var des1 = "用"+couponCount + "的券，收费"+money+"，返券"+returnCoupon+"，押金"+deposit+"。";
           var des2 = "我在闲鱼建一个"+couponCount+"券，"+(money+deposit)+"元（收费+押金）的商品，你拍一下。";
           var des3 = "你在闲鱼建一个"+returnCoupon+"返券，"+deposit+"元（押金返还）的商品，我拍一下。";
-          var des4 = "我收到你的返券，我们同时确认两笔交易。";
-          var des5 = "双向确保，比较公平。";
-          var des6 = "策略都算好了就不要再讲价了吧，或者看看市面上有没有更加合适你的价格，谢谢你~";
-          var des = des0+des1+des2+des3+des4+des5+des6;
+          var des4 = "我收到你的返券，我们同时确认两笔交易。双向确保，比较公平。";
+          var des5 = "策略都算好了就不要再讲价了吧，或者看看市面上有没有更加合适你的价格，谢谢你~";
+          var des = "";
+          [des0+des1,des2,des3,des4,des5].forEach(function (item) {
+            des = des + item + '<br/>'
+          });
 
           return {
             couponCount,
