@@ -54,7 +54,7 @@
             });
             
             var result;
-            if (location === "location_unknown" && time === 'time_in5days') {
+            if (location === "location_unknown") {
               var r1 = calcImpl(consumption, "location_hall", time);
               var r2 = calcImpl(consumption, "location_privateRoom", time);
               var result = {};
@@ -73,12 +73,6 @@
 
         calcImpl = function (consumption, location, time)
         {
-          if (time === "time_moreThan5days") {
-            return {
-              des : '请5天之内再来交易...',
-            }
-          }
-
           // 用券
           var couponCount = parseInt(consumption / 2 / 50) * 50;
           // 现金
@@ -94,21 +88,20 @@
               returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
           }
           // 押金
-          var deposit = returnCoupon * 0.35;
+          var deposit = returnCoupon * 30 / 100.0;
           // 券费
           var couponDiff = couponCount - returnCoupon;
-          var money = parseInt(couponDiff * 0.47);
-          var minMoney = parseInt(couponDiff * 0.25) + 55;
+          var money = parseInt(couponDiff * 47 / 100.0);
+          var minMoney = parseInt(couponDiff * 25 / 100.0) + 55;
           var money = money > minMoney ? money : minMoney;
 
           var locationDes = location === 'location_hall' ? '大厅' : '包间';
-          var timeDes = time === 'time_in5days' ? '5天内' : '5天以上';
-          var des0 = timeDes + "，在"+locationDes+"，点"+consumption+"元及以上的菜，"
+          var des0 = "在"+locationDes+"，点"+consumption+"元及以上的菜，"
           var des1 = "用"+couponCount + "的券，收费"+money+"元，预计返券"+returnCoupon+"，押金"+deposit+"元。";
           var des2 = "我在闲鱼建一个"+couponCount+"券，"+(money+deposit)+"元（收费+押金）的商品，你拍一下。";
           var des3 = "你在闲鱼建一个"+returnCoupon+"返券，"+deposit+"元（押金返还）的商品，我拍一下。";
           var des4 = "我收到你的返券，我们同时确认两笔交易。双向确保，比较公平。";
-          var des5 = "策略都算好了就不要再讲价了吧，或者看看市面上有没有更加合适你的价格，谢谢你~";
+          var des5 = "返券规则：包间每消费100元现金，返回50券，1000券封顶；大厅每消费100元现金，返80券，480券封顶。";
           var des = "";
           [des0+des1,des2,des3,des4,des5].forEach(function (item) {
             des = des + item + '<br/>'
@@ -139,6 +132,11 @@
               </li>
               <li>
                 <p class="bg-danger">
+                 因为回收了你的返券，所以价格已经是优惠过的，不再讲价，或者可以看看市面上有没有更加合适你的价格
+                </p>
+              </li>
+              <li>
+                <p class="bg-danger">
                   本券仅限用于北京九十九顶毡房餐饮消费区，午餐散台，包间都可使用，晚餐仅限散台使用
                 </p>
               </li>
@@ -152,11 +150,11 @@
                 使用本券时，不得超过当餐消费菜品总额的50%
                </p>
               </li>
-              <li>
+              <!-- <li>
                 <p class="bg-info">
                  返券规则：包间每消费100元现金，返回50券，1000券封顶；大厅每消费100元现金，返80券，480券封顶
                 </p>
-              </li>
+              </li> -->
               <li>
                 <p class="bg-info">
                  现场消费时，如果买的券不够可以叫闪送给你再送几张，应该能再节省点。我的微信号，UnderPinetree
@@ -203,7 +201,7 @@
       </div>
       </div>
 
-      <div class="row" style="padding-top: 20px;">
+      <!-- <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
           <label>啥时候吃</label>
         </div>
@@ -217,7 +215,7 @@
             <input type="radio" name="time" id="time_moreThan5days"> 5天以上
         </label>
       </div>
-      </div>
+      </div> -->
 
       <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
