@@ -58,10 +58,10 @@
           if (mode === "mode_coupon") {
               document.getElementById("consumption").disabled = false;
               document.getElementById("peopleCount").disabled = true;
-              document.getElementById("peopleCount").value = parseInt(parseInt(document.getElementById("consumption").value) / 270);
+              document.getElementById("peopleCount").value = parseInt(parseInt(document.getElementById("consumption").value) / 250);
           } else {
               document.getElementById("consumption").disabled = true;
-              document.getElementById("consumption").value = parseInt(document.getElementById("peopleCount").value) * 270;
+              document.getElementById("consumption").value = parseInt(document.getElementById("peopleCount").value) * 250;
               document.getElementById("peopleCount").disabled = false;
           }
 
@@ -340,9 +340,6 @@
           <fieldset disabled>
             <input type="number" class="form-control" id="deposit">
           </fieldset>
-        </div>
-        <div class="col-md-1">
-          <button class="btn btn-primary" onclick="calc()">计算</button>
         </div>
       </div>
 
