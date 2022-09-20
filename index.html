@@ -118,10 +118,10 @@
               returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
           }
           // 押金
-          var deposit = returnCoupon * 30 / 100.0;
+          var deposit = returnCoupon * 35 / 100.0;
           // 券费
           var couponDiff = couponCount - returnCoupon;
-          var money = parseInt(couponDiff * 47 / 100.0);
+          var money = parseInt(couponDiff * 499 / 1000.0);
           var minMoney = parseInt(couponDiff * 25 / 100.0) + 55;
           var money = money > minMoney ? money : minMoney;
 
