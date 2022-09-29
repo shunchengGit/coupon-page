@@ -118,7 +118,7 @@
               returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
           }
           // 押金
-          var deposit = returnCoupon * 35 / 100.0;
+          var deposit = returnCoupon * 40 / 100.0;
           // 券费
           var couponDiff = couponCount - returnCoupon;
           var money = parseInt(couponDiff * 47 / 100.0);
@@ -197,12 +197,12 @@
               <li>
                 <p class="bg-warning">
                   正常按照我的指导原则用不会产生异常，如果因为你的操作导致异常，则有如下处理规则。
-                  缺一张新券补25元，多一张新券给你10元，多一张旧券给你5元。
+                  缺一张新券扣20元，多一张新券给你10元，旧券直接返回每张给5元。
                 </p>
               </li>
               <li>
                 <p class="bg-warning">
-                比如约定返回10张新券，实际只返回8张新的3张旧的。则缺2张新券，多3张旧券。2*25-3*5=35，需要再补贴给我35元。
+                比如约定返回10张新券，实际只返回8张新的4张旧的。则缺2张新券，4张旧券直接返回。2*20-4*5=20，需要再补贴给我20元。
                 </p>
               </li>
               <li>
