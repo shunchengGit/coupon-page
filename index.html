@@ -55,18 +55,6 @@
               }
           });
 
-          if (mode === "mode_coupon") {
-              document.getElementById("consumption").disabled = false;
-              document.getElementById("peopleCount").disabled = true;
-              document.getElementById("peopleCount").value = parseInt(parseInt(document.getElementById("consumption").value) / 250);
-          } else {
-              document.getElementById("consumption").disabled = true;
-              document.getElementById("consumption").value = parseInt(document.getElementById("peopleCount").value) * 250;
-              document.getElementById("peopleCount").disabled = false;
-          }
-
-          var peopleCount = parseInt(document.getElementById("peopleCount").value);
-
             var consumption = parseInt(document.getElementById("consumption").value);
 
             var location = "";
@@ -85,12 +73,12 @@
             
             var result;
             if (location === "location_unknown") {
-              var r1 = calcImpl(mode, peopleCount, consumption, "location_hall", time);
-              var r2 = calcImpl(mode, peopleCount, consumption, "location_privateRoom", time);
+              var r1 = calcImpl(consumption, "location_hall");
+              var r2 = calcImpl(consumption, "location_privateRoom");
               var result = {};
               result.des = r1.des + "<br/>" + r2.des;
             } else {
-              result = calcImpl(mode, peopleCount, consumption, location, time);
+              result = calcImpl(consumption, location);
             }
 
             document.getElementById("couponCount").value=result.couponCount;
@@ -101,7 +89,7 @@
             document.getElementById("des").innerHTML=result.des;
         }
 
-        calcImpl = function (mode, peopleCount, consumption, location, time)
+        calcImpl = function (consumption, location)
         {
           // 用券
           var couponCount = parseInt(consumption / 2 / 50) * 50;
@@ -126,7 +114,7 @@
           var money = money > minMoney ? money : minMoney;
 
           var locationDes = location === 'location_hall' ? '大厅' : '包间';
-          var peopleDes = mode === 'mode_people' ? peopleCount + '个人，' : '';
+          var peopleDes = '';
           var des0 = peopleDes + "在"+locationDes+"，点"+consumption+"元及以上的菜，"
           var des1 = "用"+couponCount + "的券，收费"+money+"元，预计返券"+returnCoupon+"，押金"+deposit+"元。";
           var des2 = "我在闲鱼建一个"+couponCount+"券，"+(money+deposit)+"元（收费+押金）的商品，你拍一下。";
@@ -230,33 +218,7 @@
         </div>
       </div>
 
-      <div class="row" style="padding-top: 20px;">
-        <div class="col-md-1">
-          <label>模式</label>
-        </div>
-        <div class="col-md-1">
-          <label class="radio-inline">
-            <input type="radio" checked="checked" name="mode" id="mode_coupon"
-              onclick="calc()"> 吃菜
-          </label>
-        </div>
-        <div class="col-md-1">
-          <label class="radio-inline">
-            <input type="radio" name="mode" id="mode_people" onclick="calc()">
-            人头
-          </label>
-        </div>
-      </div>
 
-      <div class="row" style="padding-top: 20px;">
-        <div class="col-md-1">
-          <label>多少人吃</label>
-        </div>
-        <div class="col-md-2">
-          <input type="number" class="form-control" id="peopleCount" value="8"
-            onchange="calc()">
-        </div>
-      </div>
 
       <!-- <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
@@ -289,7 +251,13 @@
         </div>
         <div class="col-md-1">
           <label class="radio-inline">
-            <input type="radio" checked="checked" name="location"
+            <input type="radio" checked="checked" name="location" id="location_unknown"
+              onclick="calc()"> 不确定
+          </label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" name="location"
               id="location_privateRoom" onclick="calc()"> 包间
           </label>
         </div>
@@ -297,12 +265,6 @@
           <label class="radio-inline">
             <input type="radio" name="location" id="location_hall"
               onclick="calc()"> 大厅
-          </label>
-        </div>
-        <div class="col-md-1">
-          <label class="radio-inline">
-            <input type="radio" name="location" id="location_unknown"
-              onclick="calc()"> 不确定
           </label>
         </div>
       </div>
