@@ -64,6 +64,8 @@
                 }
             });
 
+            const discountPriceMode =  document.getElementById("discountPriceMode").checked ? 0 : 1;
+            
             var time = "";
             document.getElementsByName("time").forEach(function (item) {
                 if (item.checked) {
@@ -73,12 +75,12 @@
             
             var result;
             if (location === "location_unknown") {
-              var r1 = calcImpl(consumption, "location_hall");
-              var r2 = calcImpl(consumption, "location_privateRoom");
+              var r1 = calcImpl(consumption, "location_hall", discountPriceMode);
+              var r2 = calcImpl(consumption, "location_privateRoom", discountPriceMode);
               var result = {};
               result.des = r1.des + "<br/>" + r2.des;
             } else {
-              result = calcImpl(consumption, location);
+              result = calcImpl(consumption, location, discountPriceMode);
             }
 
             document.getElementById("couponCount").value=result.couponCount;
@@ -89,7 +91,7 @@
             document.getElementById("des").innerHTML=result.des;
         }
 
-        calcImpl = function (consumption, location)
+        calcImpl = function (consumption, location, discountPriceMode)
         {
           // 用券
           var couponCount = parseInt(consumption / 2 / 50) * 50;
@@ -106,10 +108,10 @@
               returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
           }
           // 押金
-          var deposit = returnCoupon * 40 / 100.0;
+          var deposit = returnCoupon * 35 / 100.0;
           // 券费
           var couponDiff = couponCount - returnCoupon;
-          var money = parseInt(couponDiff * 47 / 100.0);
+          var money = parseInt(couponDiff * (discountPriceMode === 0 ? 399 : 470) / 1000.0);
           var minMoney = parseInt(couponDiff * 25 / 100.0) + 55;
           var money = money > minMoney ? money : minMoney;
 
@@ -220,21 +222,21 @@
 
 
 
-      <!-- <div class="row" style="padding-top: 20px;">
+      <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
-          <label>啥时候吃</label>
+          <label>折扣模式</label>
         </div>
         <div class="col-md-1">
           <label class="radio-inline">
-            <input type="radio" checked="checked" name="time" id="time_in5days">  5天及之内
+            <input type="radio" name="priceMode" id="discountPriceMode" onclick="calc()">  优惠
         </label>
         </div>
         <div class="col-md-1">
           <label class="radio-inline">
-            <input type="radio" name="time" id="time_moreThan5days"> 5天以上
+            <input type="radio" name="priceMode" checked="checked" id="normalPriceMode" onclick="calc()"> 普通
         </label>
       </div>
-      </div> -->
+      </div>
       <div class="row" style="padding-top: 20px;">
         <div class="col-md-1">
           <label>点多少菜</label>
