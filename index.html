@@ -108,7 +108,12 @@
               returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
           }
           // 押金
-          var deposit = returnCoupon * 35 / 100.0;
+          function calcDeposit(returnCoupon) {
+            let money = parseInt(returnCoupon * 320 / 1000);
+            money = money - money % 10;
+            return money;
+          }
+          var deposit = calcDeposit(returnCoupon) ;
           // 券费
           var couponDiff = couponCount - returnCoupon;
           var money = parseInt(couponDiff * (discountPriceMode === 0 ? 399 : 470) / 1000.0);
@@ -122,9 +127,8 @@
           var des2 = "我在闲鱼建一个"+couponCount+"券，"+(money+deposit)+"元（收费+押金）的商品，你拍一下。";
           var des3 = "你在闲鱼建一个"+returnCoupon+"返券，"+deposit+"元（押金返还）的商品，我拍一下。";
           var des4 = "我收到你的返券，我们同时确认两笔交易。双向确保，比较公平。";
-          var des5 = "返券规则：除去用券抵扣的部分，包间每消费100元现金，返回50券，1000券封顶；大厅每消费100元现金，返80券，480券封顶。";
           var des = "";
-          [des0+des1,des2,des3,des4,des5].forEach(function (item) {
+          [des0+des1,des2,des3,des4].forEach(function (item) {
             des = des + item + '<br/>'
           });
 
@@ -213,6 +217,11 @@
               <li>
                 <p class="bg-warning">
                   返回新券的根本是看你券后消费的现金数量，只要消费的现金数量够，新券就够。基本规则是大厅现金消费每满100现金返80,480封顶。包间现金消费每满100返50,1000封顶。
+                </p>
+              </li>
+              <li>
+                <p class="bg-info">
+                  返券规则：除去用券抵扣的部分，包间每消费100元现金，返回50券，1000券封顶；大厅每消费100元现金，返80券，480券封顶。
                 </p>
               </li>
             </ol>
