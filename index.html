@@ -115,10 +115,17 @@
           }
           var deposit = calcDeposit(returnCoupon) ;
           // 券费
-          var couponDiff = couponCount - returnCoupon;
-          var money = parseInt(couponDiff * (discountPriceMode === 0 ? 399 : 470) / 1000.0);
-          var minMoney = parseInt(couponDiff * 25 / 100.0) + 55;
-          var money = money > minMoney ? money : minMoney;
+          function calcCost (couponCount, returnCoupon, discountPriceMode) {
+            const couponDiff = couponCount - returnCoupon;
+            let money = parseInt(couponDiff * (discountPriceMode === 0 ? 400 : 440) / 1000.0);
+            if(money % 10 !== 0) {
+              money = money - money % 10 + 10;
+            }
+            const minMoney = parseInt(couponDiff * 25 / 100.0) + 55;
+            money = money > minMoney ? money : minMoney;
+            return money;
+          }
+          var money = calcCost(couponCount, returnCoupon, discountPriceMode);
 
           var locationDes = location === 'location_hall' ? '大厅' : '包间';
           var peopleDes = '';
