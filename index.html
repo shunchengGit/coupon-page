@@ -109,7 +109,7 @@
           }
           // 押金
           function calcDeposit(returnCoupon) {
-            let money = parseInt(returnCoupon * 320 / 1000);
+            let money = parseInt(returnCoupon * 300 / 1000);
             money = money - money % 10;
             return money;
           }
@@ -117,11 +117,11 @@
           // 券费
           function calcCost (couponCount, returnCoupon, discountPriceMode) {
             const couponDiff = couponCount - returnCoupon;
-            let money = parseInt(couponDiff * (discountPriceMode === 0 ? 400 : 440) / 1000.0);
+            let money = parseInt(couponDiff * (discountPriceMode === 0 ? 360 : 420) / 1000.0);
             if(money % 10 !== 0) {
               money = money - money % 10 + 10;
             }
-            const minMoney = parseInt(couponDiff * 25 / 100.0) + 55;
+            const minMoney = parseInt(couponDiff * 22 / 100.0) + 55;
             money = money > minMoney ? money : minMoney;
             return money;
           }
@@ -198,12 +198,12 @@
               <li>
                 <p class="bg-warning">
                   正常按照我的指导原则用不会产生异常，如果因为你的操作导致异常，则有如下处理规则。
-                  缺一张新券扣券面价格的0.4倍，未使用的旧券按照约定时间直接返回按券面价格的0.1倍折算退款（不是买入价格），如果不按照约定时间返回则不退款。
+                  缺一张新券扣券面价格的0.3倍，未使用的旧券不退款。
                 </p>
               </li>
               <li>
                 <p class="bg-warning">
-                比如约定返回10张50新券，实际点菜太少，导致只返回8张新的50券，5张旧券直接退回。则缺2张新券（2*50*0.4=40），5张旧券直接返回（5*50*0.1=25）。需要补给我40-25=15元。
+                比如约定返回10张50新券，实际点菜太少，导致只返回8张新的50券。则缺2张新券（2*50*0.3=30），扣30元押金。
                 </p>
               </li>
               <li>
@@ -213,7 +213,7 @@
               </li>
               <li>
                 <p class="bg-warning">
-                  券没用完，比如约定点2000以上的菜，用1000的券，返回500新券。实际上只点了1800的菜，用900券，返回450新券，退回100旧券。
+                  券没用完，比如约定点2000以上的菜，用1000的券，返回500新券。实际上只点了1800的菜，用900券，返回450新券。
                 </p>
               </li>
               <li>
@@ -244,12 +244,12 @@
         </div>
         <div class="col-md-1">
           <label class="radio-inline">
-            <input type="radio" name="priceMode" id="discountPriceMode" onclick="calc()">  优惠
+            <input type="radio" name="priceMode"  checked="checked"  id="discountPriceMode" onclick="calc()">  优惠
         </label>
         </div>
         <div class="col-md-1">
           <label class="radio-inline">
-            <input type="radio" name="priceMode" checked="checked" id="normalPriceMode" onclick="calc()"> 普通
+            <input type="radio" name="priceMode" id="normalPriceMode" onclick="calc()"> 普通
         </label>
       </div>
       </div>
