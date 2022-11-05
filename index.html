@@ -117,7 +117,7 @@
           // 券费
           function calcCost (couponCount, returnCoupon, discountPriceMode) {
             const couponDiff = couponCount - returnCoupon;
-            let money = parseInt(couponDiff * (discountPriceMode === 0 ? 320 : 420) / 1000.0);
+            let money = parseInt(couponDiff * (discountPriceMode === 0 ? 320 : 360) / 1000.0);
             if(money % 10 !== 0) {
               money = money - money % 10 + 10;
             }
