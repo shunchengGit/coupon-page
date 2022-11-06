@@ -122,7 +122,7 @@
         let rate = 400;
         switch (discountPriceMode) {
           case 0:
-            rate = 320;
+            rate = 300;
             break;
           case 1:
             rate = 360;
@@ -138,7 +138,7 @@
         if (money % 10 !== 0) {
           money = money - money % 10 + 10;
         }
-        const minMoney = parseInt(couponDiff * 21 / 100.0) + 50;
+        const minMoney = parseInt(couponDiff * 200 / 1000) + 50;
         money = money > minMoney ? money : minMoney;
         return money;
       }
