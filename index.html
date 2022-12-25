@@ -65,9 +65,6 @@
 
 
       let discountPriceMode = document.getElementById("discountPriceMode").checked ? 0 : 1;
-      if (document.getElementById("normalPriceMode").checked) {
-        discountPriceMode = 2;
-      }
 
       var time = "";
       document.getElementsByName("time").forEach(function (item) {
@@ -119,7 +116,7 @@
       // 券费
       function calcCost(couponCount, returnCoupon, discountPriceMode) {
         const couponDiff = couponCount - returnCoupon;
-        let rate = 400;
+        let rate = 360;
         switch (discountPriceMode) {
           case 0:
             rate = 300;
@@ -127,11 +124,8 @@
           case 1:
             rate = 360;
             break;
-          case 2:
-            rate = 400;
-            break;
           default:
-            rate = 400;
+            rate = 360;
             break;
         }
         let money = parseInt(couponDiff * rate / 1000.0);
@@ -262,11 +256,6 @@
       <div class="col-md-1">
         <label class="radio-inline">
           <input type="radio" name="priceMode" checked="checked" id="discountPriceMode" onclick="calc()"> 优惠
-        </label>
-      </div>
-      <div class="col-md-1">
-        <label class="radio-inline">
-          <input type="radio" name="priceMode" id="midPriceMode" onclick="calc()"> 中等
         </label>
       </div>
       <div class="col-md-1">
