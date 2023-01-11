@@ -116,13 +116,13 @@
       // 券费
       function calcCost(couponCount, returnCoupon, discountPriceMode) {
         const couponDiff = couponCount - returnCoupon;
-        let rate = 540;
+        let rate = 600;
         switch (discountPriceMode) {
           case 0:
-            rate = 460;
+            rate = 540;
             break;
           case 1:
-            rate = 540;
+            rate = 600;
             break;
           default:
             rate = 540;
