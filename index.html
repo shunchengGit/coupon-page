@@ -116,13 +116,13 @@
       // 券费
       function calcCost(couponCount, returnCoupon, discountPriceMode) {
         const couponDiff = couponCount - returnCoupon;
-        let rate = 600;
+        let rate = 500;
         switch (discountPriceMode) {
           case 0:
-            rate = 540;
+            rate = 500;
             break;
           case 1:
-            rate = 600;
+            rate = 540;
             break;
           default:
             rate = 540;
@@ -145,8 +145,10 @@
       var des2 = "我在闲鱼建一个" + couponCount + "券，" + (money + deposit) + "元（收费+押金）的商品，你拍一下。";
       var des3 = "你在闲鱼建一个" + returnCoupon + "返券，" + deposit + "元（押金返还）的商品，我拍一下。";
       var des4 = "我收到你的返券，我们同时确认两笔交易。双向确保，比较公平。";
+      var des5 = "谁寄出谁支付邮费，如果是闪送则不包邮";
+      var des6 = "返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导不会出错";
       var des = "";
-      [des0 + des1, des2, des3, des4].forEach(function (item) {
+      [des0 + des1, des2, des3, des4, des5, des6].forEach(function (item) {
         des = des + item + '<br/>'
       });
 
@@ -168,7 +170,7 @@
         <ol>
           <li>
             <p class="bg-danger">
-              用完券后，商家给你新返的券不能自留，需要全邮给我，返多少邮多少。如果确实需要自留，请联系我另算价格（自留常见价格有1000券350元，500券180元等）
+              用完券后，商家给你新返的券不能自留，需要全邮给我，返多少邮多少。如果确实需要自留，请联系我另算价格
             </p>
           </li>
           <li>
@@ -209,12 +211,12 @@
           <li>
             <p class="bg-warning">
               正常按照我的指导原则用不会产生异常，如果因为你的操作导致异常，则有如下处理规则。
-              缺一张新券扣券面价格的0.3倍，未使用的旧券不退款。
+              缺一张新券扣券面价格的0.4倍，未使用的旧券不退款。
             </p>
           </li>
           <li>
             <p class="bg-warning">
-              比如约定返回10张50新券，实际点菜太少，导致只返回8张新的50券。则缺2张新券（2*50*0.3=30），扣30元押金。
+              比如约定返回10张50新券，实际点菜太少，导致只返回8张新的50券。则缺2张新券（2*50*0.4=40），扣40元押金。
             </p>
           </li>
           <li>
@@ -255,12 +257,12 @@
       </div>
       <div class="col-md-1">
         <label class="radio-inline">
-          <input type="radio" name="priceMode"  id="discountPriceMode" onclick="calc()"> 优惠
+          <input type="radio" name="priceMode"  checked="checked" id="discountPriceMode" onclick="calc()"> 优惠
         </label>
       </div>
       <div class="col-md-1">
         <label class="radio-inline">
-          <input type="radio" name="priceMode" checked="checked" id="normalPriceMode" onclick="calc()"> 普通
+          <input type="radio" name="priceMode"  id="normalPriceMode" onclick="calc()"> 普通
         </label>
       </div>
     </div>
@@ -280,12 +282,12 @@
       </div>
       <div class="col-md-1">
         <label class="radio-inline">
-          <input type="radio" checked="checked" name="location" id="location_unknown" onclick="calc()"> 不确定
+          <input type="radio" name="location" id="location_unknown" onclick="calc()"> 不确定
         </label>
       </div>
       <div class="col-md-1">
         <label class="radio-inline">
-          <input type="radio" name="location" id="location_privateRoom" onclick="calc()"> 包间
+          <input type="radio" checked="checked" name="location" id="location_privateRoom" onclick="calc()"> 包间
         </label>
       </div>
       <div class="col-md-1">
