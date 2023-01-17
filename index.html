@@ -108,7 +108,7 @@
       }
       // 押金
       function calcDeposit(returnCoupon) {
-        let money = parseInt(returnCoupon * 400 / 1000);
+        let money = parseInt(returnCoupon * 300 / 1000);
         money = money - money % 10;
         return money;
       }
@@ -116,23 +116,23 @@
       // 券费
       function calcCost(couponCount, returnCoupon, discountPriceMode) {
         const couponDiff = couponCount - returnCoupon;
-        let rate = 500;
+        let rate = 460;
         switch (discountPriceMode) {
           case 0:
-            rate = 500;
+            rate = 460;
             break;
           case 1:
-            rate = 540;
+            rate = 500;
             break;
           default:
-            rate = 540;
+            rate = 500;
             break;
         }
         let money = parseInt(couponDiff * rate / 1000.0);
         if (money % 10 !== 0) {
           money = money - money % 10 + 10;
         }
-        const minMoney = parseInt(couponDiff * 360 / 1000) + 50;
+        const minMoney = parseInt(couponDiff * 320 / 1000) + 50;
         money = money > minMoney ? money : minMoney;
         return money;
       }
