@@ -140,12 +140,12 @@
 
       var locationDes = location === 'location_hall' ? '大厅' : '包间';
       var peopleDes = '';
-      var des0 = peopleDes + "在" + locationDes + "，点" + consumption + "元及以上的菜，"
-      var des1 = "用" + couponCount + "的券，收费" + money + "元，预期返券" + returnCoupon + "，押金" + deposit + "元。";
-      var des2 = "我在闲鱼建一个" + couponCount + "券，" + (money + deposit) + "元（收费+押金）的商品，你拍一下。";
-      var des3 = "你在闲鱼建一个" + returnCoupon + "返券，" + deposit + "元（押金返还）的商品，我拍一下。";
+      var des0 = `${peopleDes}在${locationDes}，点${consumption}元及以上的菜，`
+      var des1 = `用${couponCount}的券，收费${money}元，预期返券${returnCoupon}，押金${deposit}元。`;
+      var des2 = `我在闲鱼建一个${couponCount}券，${money + deposit}元（收费${money}+押金${deposit}）的商品，你拍一下。`;
+      var des3 = `你在闲鱼建一个${returnCoupon}返券，${deposit}元（押金${deposit}返还）的商品，我拍一下。`;
       var des4 = "我收到你的返券，我们同时确认两笔交易。双向确保，比较公平。";
-      var des5 = "谁寄出谁支付邮费，如果是闪送则不包邮";
+      var des5 = "谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费。";
       var des6 = "返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导不会出错";
       var des = "";
       [des0 + des1, des2, des3, des4, des5, des6].forEach(function (item) {
