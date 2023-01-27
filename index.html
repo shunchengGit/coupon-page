@@ -132,7 +132,7 @@
         if (money % 10 !== 0) {
           money = money - money % 10 + 10;
         }
-        const minMoney = parseInt(couponDiff * 320 / 1000) + 50;
+        const minMoney = parseInt(couponDiff * 320 / 1000) + 55;
         money = money > minMoney ? money : minMoney;
         return money;
       }
