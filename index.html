@@ -41,7 +41,18 @@
 
     </style> -->
   <script>
+
+    const config = {
+      priceMode:"normal", // "normal"、"discount"
+      discountPrice:380,
+      normalPrice: 440,
+      cost: 240,
+      deposit: 360,
+    }
+
     onload = function () {
+      const theId = config.priceMode + 'PriceMode';
+      document.getElementById(theId).checked  = 1;
       calc()
     }
 
@@ -108,7 +119,7 @@
       }
       // 押金
       function calcDeposit(returnCoupon) {
-        let money = parseInt(returnCoupon * 300 / 1000);
+        let money = parseInt(returnCoupon * config.deposit / 1000);
         money = money - money % 10;
         return money;
       }
@@ -116,23 +127,23 @@
       // 券费
       function calcCost(couponCount, returnCoupon, discountPriceMode) {
         const couponDiff = couponCount - returnCoupon;
-        let rate = 360;
+        let rate = config.normalPrice;
         switch (discountPriceMode) {
           case 0:
-            rate = 360;
+            rate = config.discountPrice;
             break;
           case 1:
-            rate = 400;
+            rate = config.normalPrice;
             break;
           default:
-            rate = 400;
+            rate = config.normalPrice;
             break;
         }
         let money = parseInt(couponDiff * rate / 1000.0);
         if (money % 10 !== 0) {
           money = money - money % 10 + 10;
         }
-        const minMoney = parseInt(couponDiff * 220 / 1000) + 53;
+        const minMoney = parseInt(couponDiff * config.cost / 1000) + 53;
         money = money > minMoney ? money : minMoney;
         return money;
       }
@@ -148,8 +159,8 @@
       var des5 = "谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费。";
       var des6 = "返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导不会出错";
       var des = "";
-      [des0 + des1, des2, des3, des4, des5, des6].forEach(function (item) {
-        des = des + item + '<br/>'
+      [des0 + des1, des2, des3, des4, des5, des6].forEach(function (item, index) {
+        des = `${des}${index+1}. ${item}<br/>`
       });
 
       return {
