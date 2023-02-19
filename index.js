@@ -1,9 +1,10 @@
 const config = {
   priceMode: "normal", // "normal"、"discount"
-  discountPrice: 380,
-  normalPrice: 440,
-  cost: 240,
+  discountPrice: 420,
+  normalPrice: 460,
+  cost: 250,
   deposit: 300,
+  minProfit: 53
 }
 
 onload = function () {
@@ -80,7 +81,7 @@ calcImpl = function (consumption, location, discountPriceMode) {
     if (money % 10 !== 0) {
       money = money - money % 10 + 10;
     }
-    const minMoney = parseInt(couponDiff * config.cost / 1000) + 53;
+    const minMoney = parseInt(couponDiff * config.cost / 1000) + config.minProfit;
     money = money > minMoney ? money : minMoney;
     return money;
   }
