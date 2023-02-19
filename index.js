@@ -12,38 +12,21 @@ onload = function () {
   calc()
 }
 
-calc = function () {
-  var mode = "";
-  document.getElementsByName("mode").forEach(function (item) {
-    if (item.checked) {
-      mode = item.id;
-    }
-  });
+const calc = () => {
+  const getCheckedValue = (name) => {
+    const element = document.querySelector(`input[name=${name}]:checked`);
+    return element ? element.id : '';
+  };
 
-  var consumption = parseInt(document.getElementById("consumption").value);
-
-  var location = "";
-  document.getElementsByName("location").forEach(function (item) {
-    if (item.checked) {
-      location = item.id;
-    }
-  });
-
-  let discountPriceMode = document.getElementById("discountPriceMode").checked ? 0 : 1;
-
-  var time = "";
-  document.getElementsByName("time").forEach(function (item) {
-    if (item.checked) {
-      time = item.id;
-    }
-  });
-
-  var result;
+  const consumption = parseInt(document.getElementById("consumption").value);
+  const location = getCheckedValue("location");
+  const discountPriceMode = document.getElementById("discountPriceMode").checked ? 0 : 1;
+  
+  let result;
   if (location === "location_unknown") {
-    var r1 = calcImpl(consumption, "location_hall", discountPriceMode);
-    var r2 = calcImpl(consumption, "location_privateRoom", discountPriceMode);
-    var result = {};
-    result.des = r1.des + "<br/>" + r2.des;
+    const r1 = calcImpl(consumption, "location_hall", discountPriceMode);
+    const r2 = calcImpl(consumption, "location_privateRoom", discountPriceMode);
+    result = { des: `${r1.des}<br/>${r2.des}` };
   } else {
     result = calcImpl(consumption, location, discountPriceMode);
   }
@@ -54,7 +37,7 @@ calc = function () {
   document.getElementById("deposit").value = result.deposit;
   document.getElementById("money").value = result.money;
   document.getElementById("des").innerHTML = result.des;
-}
+};
 
 calcImpl = function (consumption, location, discountPriceMode) {
   // 用券
