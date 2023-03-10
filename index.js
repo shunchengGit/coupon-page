@@ -1,12 +1,14 @@
 const config = {
-  cost: 250,
+  cost: 240,
   deposit: 300,
-  minProfit: 53
+  minProfit: 53,
+  defaultDiscountPrice: 420,
+  singleSoldPrice:340,
 }
 
 onload = function () {
-  // const theId = config.priceMode + 'PriceMode';
-  // document.getElementById(theId).checked = 1;
+  document.getElementById("discountPrice").value = config.defaultDiscountPrice;
+  document.getElementById("singlePrice").value = config.singleSoldPrice;
   calc()
 }
 
@@ -19,14 +21,16 @@ const calc = () => {
   const consumption = parseInt(document.getElementById("consumption").value);
   const discountPrice = parseInt(document.getElementById("discountPrice").value);
   const location = getCheckedValue("location");
-  
+  const source = getCheckedValue("source");
+  const priceType = getCheckedValue("priceType");
+
   let result;
   if (location === "location_unknown") {
-    const r1 = calcImpl(consumption, "location_hall", discountPrice);
-    const r2 = calcImpl(consumption, "location_privateRoom", discountPrice);
+    const r1 = calcImpl(consumption, "location_hall", discountPrice, source, priceType);
+    const r2 = calcImpl(consumption, "location_privateRoom", discountPrice, source, priceType);
     result = { des: `${r1.des}<br/>${r2.des}` };
   } else {
-    result = calcImpl(consumption, location, discountPrice);
+    result = calcImpl(consumption, location, discountPrice, source, priceType);
   }
 
   document.getElementById("couponCount").value = result.couponCount;
@@ -37,7 +41,7 @@ const calc = () => {
   document.getElementById("des").innerHTML = result.des;
 };
 
-calcImpl = function (consumption, location, discountPrice) {
+calcImpl = function (consumption, location, discountPrice, source, priceType) {
   // 用券
   var couponCount = parseInt(consumption / 2 / 50) * 50;
   // 现金
@@ -59,35 +63,69 @@ calcImpl = function (consumption, location, discountPrice) {
     return money;
   }
   var deposit = calcDeposit(returnCoupon);
-  // 券费
-  function calcCost(couponCount, returnCoupon, discountPrice) {
+
+  // 计算线性价格
+  function calcLinearCost(couponCount, returnCoupon, discountPrice, bottomLineStrategy = true) {
     const couponDiff = couponCount - returnCoupon;
     let rate = discountPrice;
     let money = parseInt(couponDiff * rate / 1000.0);
-    if (money % 10 !== 0) {
-      money = money - money % 10 + 10;
+    if (bottomLineStrategy) {
+      if (money % 10 !== 0) {
+        money = money - money % 10 + 10;
+      }
+      const minMoney = parseInt(couponDiff * config.cost / 1000) + config.minProfit;
+      money = money > minMoney ? money : minMoney;
     }
-    const minMoney = parseInt(couponDiff * config.cost / 1000) + config.minProfit;
-    money = money > minMoney ? money : minMoney;
     return money;
   }
-  var money = calcCost(couponCount, returnCoupon, discountPrice);
+
+  // 券费
+  function calcCost(couponCount, returnCoupon, discountPrice, location, priceType) {
+    let money = calcLinearCost(couponCount, returnCoupon, discountPrice);
+    if (priceType === 'priceType_tiered') {
+      // 超过上限的部分使用单出价格计算
+      if (location === 'location_hall' && returnCoupon === 480 && couponCount > 600) {
+        money = calcLinearCost(couponCount, 600, config.singleSoldPrice, false) + calcLinearCost(600, 480, discountPrice);
+      } else if (location === 'location_privateRoom' && returnCoupon === 1000 && couponCount > 2000) {
+        money = calcLinearCost(couponCount, 2000, config.singleSoldPrice, false) + calcLinearCost(2000, 1000, discountPrice);
+      }
+    }
+    return money;
+  }
+
+  var money = calcCost(couponCount, returnCoupon, discountPrice, location, priceType);
 
   var locationDes = location === 'location_hall' ? '大厅' : '包间';
-  const desList = [
-    `[${locationDes}方案]`,
-    `在${locationDes}，点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元，预期返券${returnCoupon}，押金${deposit}元。`,
-    ``,
-    `[具体操作]`,
-    `1. 首先，我在闲鱼建一个${couponCount}券，${money + deposit}元（收费${money}+押金${deposit}）。你拍下后我通过此订单把券寄给你。`,
-    `2. 同时，你在闲鱼建一个${returnCoupon}返券，${deposit}元（押金${deposit}返还）。我拍一下，你吃完后通过此订单把券返给我。`,
-    `3. 最后，我收到你的返券，我们同时确认两笔交易。双向确保，十分安全。`,
-    ``,
-    `[注意事项]`,
-    `1. 谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费。`,
-    `2. 返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导返券不会出错`,
-    `3. 商家返券规则：除去用券抵扣的部分，包间每消费100元现金，返回50券，1000券封顶；大厅每消费100元现金，返80券，480券封顶。`
-  ];
+  let desList = null;
+  if (source === 'source_wechat') {
+    desList = [
+      `[${locationDes}方案]`,
+      `在${locationDes}，点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元，预期返券${returnCoupon}，微信渠道，无押金。`,
+      ``,
+      `[具体操作]`,
+      `1. 首先，我在闲鱼建一个${couponCount}券，0.1元订单，方便我给你邮寄。你通过此订单拍下（邮寄地址和联系电话要填对），我通过此订单把券寄给你。`,
+      `2. 其次，你在收到我的券后给我转${money}元。`,
+      `3. 最后，在你消费完成以后，通过快递把${returnCoupon}返券寄给我。联系人：程先生 联系方式：18600003671 邮寄地址：北京昌平回龙观流星花园3区35号楼菜鸟柜。`,
+      ``,
+      `[注意事项]`,
+      `谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费。`,
+    ];
+  } else {
+    desList = [
+      `[${locationDes}方案]`,
+      `在${locationDes}，点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元，预期返券${returnCoupon}，押金${deposit}元。`,
+      ``,
+      `[具体操作]`,
+      `1. 首先，我在闲鱼建一个${couponCount}券，${money + deposit}元（收费${money}+押金${deposit}）。你拍下后我通过此订单把券寄给你。（邮寄地址和联系电话要填对）`,
+      `2. 同时，你在闲鱼建一个${returnCoupon}返券，${deposit}元（押金${deposit}返还）。我拍一下，你吃完后通过此订单把券返给我。（订单上有我的地址和电话）`,
+      `3. 最后，我收到你的返券，我们同时确认两笔交易。双向确保，十分安全。`,
+      ``,
+      `[注意事项]`,
+      `1. 谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费。`,
+      `2. 返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导返券不会出错`,
+      `3. 商家返券规则：除去用券抵扣的部分，包间每消费100元现金，返回50券，1000券封顶；大厅每消费100元现金，返80券，480券封顶。`
+    ];
+  }
   var des = "";
   desList.forEach(function (item, index) {
     des = `${des} ${item}<br/>`

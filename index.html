@@ -91,7 +91,7 @@
                   本券不可与其他优惠同时使用，限堂食不打包
                 </p>
               </li>
-              <li>
+              <!-- <li>
                 <p class="bg-warning">
                   正常按照我的指导原则用不会产生异常，如果因为你的操作导致异常，则有如下处理规则。
                   缺一张新券扣券面价格的0.4倍，未使用的旧券不退款。
@@ -121,7 +121,7 @@
                 <p class="bg-warning">
                   返回新券的根本是看你券后消费的现金数量，只要消费的现金数量够，新券就够。基本规则是大厅现金消费每满100现金返80,480封顶。包间现金消费每满100返50,1000封顶。
                 </p>
-              </li>
+              </li> -->
             </ol>
           </p>
         </div>
@@ -132,10 +132,19 @@
           <label>折扣价格</label>
         </div>
         <div class="col-md-2">
-          <input type="number" class="form-control" id="discountPrice"
-            value="460" onchange="calc()">
+          <input type="number" class="form-control" id="discountPrice" onchange="calc()">
         </div>
       </div>
+
+      <div class="row" style="padding-top: 20px;">
+        <div class="col-md-1">
+          <label>单出价格</label>
+        </div>
+        <div class="col-md-2">
+          <input type="number" class="form-control" id="singlePrice" onchange="calc()">
+        </div>
+      </div>
+
 
 
       <div class="row" style="padding-top: 20px;">
@@ -145,6 +154,42 @@
         <div class="col-md-2">
           <input type="number" class="form-control" id="consumption"
             value="2000" onchange="calc()">
+        </div>
+      </div>
+
+      <div class="row" style="padding-top: 20px;">
+        <div class="col-md-1">
+          <label>计价方式</label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" name="priceType" checked="checked"
+              id="priceType_tiered" onclick="calc()"> 阶梯
+          </label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" name="priceType" id="priceType_linear"
+              onclick="calc()"> 线性
+          </label>
+        </div>
+      </div>
+
+      <div class="row" style="padding-top: 20px;">
+        <div class="col-md-1">
+          <label>渠道</label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" name="source" checked="checked" id="source_xianyu"
+              onclick="calc()"> 闲鱼
+          </label>
+        </div>
+        <div class="col-md-1">
+          <label class="radio-inline">
+            <input type="radio" name="source"
+              id="source_wechat" onclick="calc()"> 微信
+          </label>
         </div>
       </div>
 
