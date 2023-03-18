@@ -3,7 +3,7 @@ const config = {
   deposit: 300,
   minProfit: 53,
   defaultDiscountPrice: 460,
-  singleSoldPrice:340,
+  singleSoldPrice:350,
 }
 
 onload = function () {
@@ -84,8 +84,8 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
     let money = calcLinearCost(couponCount, returnCoupon, discountPrice);
     if (priceType === 'priceType_tiered') {
       // 超过上限的部分使用单出价格计算
-      if (location === 'location_hall' && returnCoupon === 480 && couponCount > 600) {
-        money = calcLinearCost(couponCount, 600, config.singleSoldPrice, false) + calcLinearCost(600, 480, discountPrice);
+      if (location === 'location_hall' && returnCoupon === 480 && couponCount > 1000) {
+        money = calcLinearCost(couponCount, 1000, config.singleSoldPrice, false) + calcLinearCost(1000, 480, discountPrice);
       } else if (location === 'location_privateRoom' && returnCoupon === 1000 && couponCount > 2000) {
         money = calcLinearCost(couponCount, 2000, config.singleSoldPrice, false) + calcLinearCost(2000, 1000, discountPrice);
       }
