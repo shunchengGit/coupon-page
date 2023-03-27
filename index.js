@@ -2,8 +2,8 @@ const config = {
   cost: 240,
   deposit: 300,
   minProfit: 53,
-  defaultDiscountPrice: 400,
-  singleSoldPrice:300,
+  defaultDiscountPrice: 440,
+  singleSoldPrice:320,
 }
 
 onload = function () {
@@ -28,7 +28,7 @@ const calc = () => {
   if (location === "location_unknown") {
     const r1 = calcImpl(consumption, "location_hall", discountPrice, source, priceType);
     const r2 = calcImpl(consumption, "location_privateRoom", discountPrice, source, priceType);
-    result = { des: `${r1.des}<br/>${r2.des}` };
+    result = { detail: `${r1.detail}<br/>${r2.detail}`,  abstract: `${r1.abstract}<br/>${r2.abstract}`};
   } else {
     result = calcImpl(consumption, location, discountPrice, source, priceType);
   }
@@ -38,7 +38,8 @@ const calc = () => {
   document.getElementById("returnCoupon").value = result.returnCoupon;
   document.getElementById("deposit").value = result.deposit;
   document.getElementById("money").value = result.money;
-  document.getElementById("des").innerHTML = result.des;
+  document.getElementById("desDetail").innerHTML = result.detail;
+  document.getElementById("desAbstract").innerHTML = result.abstract;
 };
 
 calcImpl = function (consumption, location, discountPrice, source, priceType) {
@@ -97,10 +98,11 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
 
   var locationDes = location === 'location_hall' ? '大厅' : '包间';
   let desList = null;
+  const abstract = `在${locationDes}，点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元`;
   if (source === 'source_wechat') {
     desList = [
       `[${locationDes}方案]`,
-      `在${locationDes}，点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元，预期返券${returnCoupon}，微信渠道，无押金。`,
+      `${abstract}。预期返券${returnCoupon}，微信渠道，无押金。`,
       ``,
       `[具体操作]`,
       `1. 首先，我在闲鱼建一个${couponCount}券，0.1元订单，方便我给你邮寄。你通过此订单拍下（邮寄地址和联系电话要填对），我通过此订单把券寄给你。`,
@@ -113,7 +115,7 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
   } else {
     desList = [
       `[${locationDes}方案]`,
-      `在${locationDes}，点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元，预期返券${returnCoupon}，押金${deposit}元。`,
+      `${abstract}。预期返券${returnCoupon}，押金${deposit}元。`,
       ``,
       `[具体操作]`,
       `1. 首先，我在闲鱼建一个${couponCount}券，${money + deposit}元（收费${money}+押金${deposit}）。你拍下后我通过此订单把券寄给你。（邮寄地址和联系电话要填对）`,
@@ -125,9 +127,9 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
       `2. 返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导返券不会出错`
     ];
   }
-  var des = "";
+  var detail = "";
   desList.forEach(function (item, index) {
-    des = `${des} ${item}<br/>`
+    detail = `${detail} ${item}<br/>`
   });
 
   return {
@@ -136,12 +138,20 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
     returnCoupon,
     money,
     deposit,
-    des,
+    detail,
+    abstract,
   }
 }
 
-const copy = () => {
-  let text = document.getElementById("des").innerHTML;
+const copyAbstract = () => {
+  let text = document.getElementById("desAbstract").innerHTML;
+  text = text.replaceAll("<br>", "\n")
+  copyText(text);
+  alert("已复制到剪切板");
+}
+
+const copyDetail = () => {
+  let text = document.getElementById("desDetail").innerHTML;
   text = text.replaceAll("<br>", "\n")
   copyText(text);
   alert("已复制到剪切板");
