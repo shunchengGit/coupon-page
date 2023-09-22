@@ -2,8 +2,8 @@ const config = {
   cost: 200,
   deposit: 200,
   minProfit: 65,
-  defaultDiscountPrice: 400,
-  singleSoldPrice:300,
+  defaultDiscountPrice: 420,
+  singleSoldPrice:320,
 }
 
 onload = function () {
