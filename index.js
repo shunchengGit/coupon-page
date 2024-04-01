@@ -1,9 +1,9 @@
 const config = {
-  cost: 250,
+  cost: 220,
   deposit: 300,
   minProfit: 65,
-  defaultDiscountPrice: 500,
-  singleSoldPrice:350,
+  defaultDiscountPrice: 440,
+  singleSoldPrice:320,
 }
 
 onload = function () {
@@ -50,13 +50,9 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
   // 返券
   var returnCoupon = 0;
   cashIndex = parseInt(cash / 100) * 100;
-  if (location === 'location_hall') {
-    returnCoupon = cashIndex * 0.8;
-    returnCoupon = returnCoupon > 480 ? 480 : returnCoupon;
-  } else {
-    returnCoupon = cashIndex * 0.5;
-    returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
-  }
+  returnCoupon = cashIndex * 0.5;
+  returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
+
   // 押金
   function calcDeposit(returnCoupon) {
     let money = parseInt(returnCoupon * config.deposit / 1000);
@@ -85,11 +81,9 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
     let money = calcLinearCost(couponCount, returnCoupon, discountPrice);
     if (priceType === 'priceType_tiered') {
       // 超过上限的部分使用单出价格计算
-      if (location === 'location_hall' && returnCoupon === 480 && couponCount > 1000) {
-        money = calcLinearCost(couponCount, 1000, config.singleSoldPrice, false) + calcLinearCost(1000, 480, discountPrice);
-      } else if (location === 'location_privateRoom' && returnCoupon === 1000 && couponCount > 2000) {
-        money = calcLinearCost(couponCount, 2000, config.singleSoldPrice, false) + calcLinearCost(2000, 1000, discountPrice);
-      }
+      if (returnCoupon === 500 && couponCount > 1000) {
+        money = calcLinearCost(couponCount, 1000, config.singleSoldPrice, false) + calcLinearCost(1000, 500, discountPrice);
+      } 
     }
     return money;
   }
@@ -98,7 +92,7 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
 
   var locationDes = location === 'location_hall' ? '大厅' : '包间';
   let desList = null;
-  const abstract = `在${locationDes}，点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元`;
+  const abstract = `点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元`;
   if (source === 'source_wechat') {
     desList = [
       `[${locationDes}方案]`,
