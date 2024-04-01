@@ -3,7 +3,7 @@ const config = {
   deposit: 300,
   minProfit: 65,
   defaultDiscountPrice: 440,
-  singleSoldPrice:320,
+  singleSoldPrice:350,
 }
 
 onload = function () {
@@ -51,7 +51,7 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
   var returnCoupon = 0;
   cashIndex = parseInt(cash / 100) * 100;
   returnCoupon = cashIndex * 0.5;
-  returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
+  returnCoupon = returnCoupon > 500 ? 500 : returnCoupon;
 
   // 押金
   function calcDeposit(returnCoupon) {
