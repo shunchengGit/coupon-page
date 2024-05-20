@@ -1,8 +1,8 @@
 const config = {
-  cost: 220,
-  deposit: 300,
+  cost: 320,
+  deposit: 400,
   minProfit: 65,
-  defaultDiscountPrice: 440,
+  defaultDiscountPrice: 600,
   singleSoldPrice:350,
 }
 
@@ -51,7 +51,7 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
   var returnCoupon = 0;
   cashIndex = parseInt(cash / 100) * 100;
   returnCoupon = cashIndex * 0.5;
-  returnCoupon = returnCoupon > 500 ? 500 : returnCoupon;
+  returnCoupon = returnCoupon > 1000 ? 1000 : returnCoupon;
 
   // 押金
   function calcDeposit(returnCoupon) {
@@ -81,8 +81,8 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
     let money = calcLinearCost(couponCount, returnCoupon, discountPrice);
     if (priceType === 'priceType_tiered') {
       // 超过上限的部分使用单出价格计算
-      if (returnCoupon === 500 && couponCount > 1000) {
-        money = calcLinearCost(couponCount, 1000, config.singleSoldPrice, false) + calcLinearCost(1000, 500, discountPrice);
+      if (returnCoupon === 1000 && couponCount > 2000) {
+        money = calcLinearCost(couponCount, 2000, config.singleSoldPrice, false) + calcLinearCost(2000, 1000, discountPrice);
       } 
     }
     return money;
