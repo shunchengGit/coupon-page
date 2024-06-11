@@ -20,18 +20,14 @@ const calc = () => {
 
   const consumption = parseInt(document.getElementById("consumption").value);
   const discountPrice = parseInt(document.getElementById("discountPrice").value);
+  const singleSoldPrice = parseInt(document.getElementById("singlePrice").value);
   const location = getCheckedValue("location");
   const source = getCheckedValue("source");
   const priceType = getCheckedValue("priceType");
+  const recoveryType = getCheckedValue("recoveryType");
 
   let result;
-  if (location === "location_unknown") {
-    const r1 = calcImpl(consumption, "location_hall", discountPrice, source, priceType);
-    const r2 = calcImpl(consumption, "location_privateRoom", discountPrice, source, priceType);
-    result = { detail: `${r1.detail}<br/>${r2.detail}`,  abstract: `${r1.abstract}<br/>${r2.abstract}`};
-  } else {
-    result = calcImpl(consumption, location, discountPrice, source, priceType);
-  }
+  result = calcImpl(consumption, location, discountPrice, singleSoldPrice, source, priceType, recoveryType);
 
   document.getElementById("couponCount").value = result.couponCount;
   document.getElementById("cash").value = result.cash;
@@ -42,7 +38,7 @@ const calc = () => {
   document.getElementById("desAbstract").innerHTML = result.abstract;
 };
 
-calcImpl = function (consumption, location, discountPrice, source, priceType) {
+calcImpl = function (consumption, location, discountPrice, singleSoldPrice, source, priceType, recoveryType) {
   // 用券
   var couponCount = parseInt(consumption / 2 / 50) * 50;
   // 现金
@@ -82,33 +78,28 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
     if (priceType === 'priceType_tiered') {
       // 超过上限的部分使用单出价格计算
       if (returnCoupon === 1000 && couponCount > 2000) {
-        money = calcLinearCost(couponCount, 2000, config.singleSoldPrice, false) + calcLinearCost(2000, 1000, discountPrice);
+        money = calcLinearCost(couponCount, 2000, singleSoldPrice, false) + calcLinearCost(2000, 1000, discountPrice);
       } 
     }
     return money;
   }
 
   var money = calcCost(couponCount, returnCoupon, discountPrice, location, priceType);
-
-  var locationDes = location === 'location_hall' ? '大厅' : '包间';
   let desList = null;
   const abstract = `点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元`;
   if (source === 'source_wechat') {
     desList = [
-      `[${locationDes}方案]`,
       `${abstract}。预期返券${returnCoupon}，微信渠道，无押金。`,
       ``,
       `[具体操作]`,
-      `1. 首先，我在闲鱼建一个${couponCount}券，0.1元订单，方便我给你邮寄。你通过此订单拍下（邮寄地址和联系电话要填对），我通过此订单把券寄给你。`,
-      `2. 其次，你在收到我的券后给我转${money}元。`,
-      `3. 最后，在你消费完成以后，通过快递把${returnCoupon}返券寄给我。联系人：程先生 联系方式：18600003671 邮寄地址：北京昌平回龙观流星花园3区35号楼菜鸟柜。`,
+      `1. 你把联系电话和地址发给我，我给你邮件${couponCount}券，你在收到我的券后给我转${money}元。`,
+      `2. 在你消费完成以后，通过快递把${returnCoupon}返券寄给我。联系人：程先生 联系方式：18600003671 邮寄地址：北京昌平回龙观流星花园3区35号楼快递柜。`,
       ``,
       `[注意事项]`,
       `谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费。`,
     ];
   } else {
     desList = [
-      `[${locationDes}方案]`,
       `${abstract}。预期返券${returnCoupon}，押金${deposit}元。`,
       ``,
       `[具体操作]`,
@@ -117,10 +108,15 @@ calcImpl = function (consumption, location, discountPrice, source, priceType) {
       `3. 最后，我收到你的返券，我们同时确认两笔交易。双向确保，十分安全。`,
       ``,
       `[注意事项]`,
-      `1. 谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费。`,
-      `2. 返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导返券不会出错`
+      `谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费`,
+      `返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导返券不会出错`,
     ];
   }
+
+  if (recoveryType == 'recoveryType_y') {
+    desList.push(`如果吃的非常多，返券超出预期返券数量，则按照15一张新50券进行回收(你把超出券也给我，我每张给你15)`);
+  }
+
   var detail = "";
   desList.forEach(function (item, index) {
     detail = `${detail} ${item}<br/>`
