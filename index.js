@@ -1,9 +1,9 @@
 const config = {
-  cost: 320,
+  cost: 260,
   deposit: 400,
   minProfit: 65,
-  defaultDiscountPrice: 600,
-  singleSoldPrice:350,
+  defaultDiscountPrice: 520,
+  singleSoldPrice:320,
 }
 
 onload = function () {
@@ -114,7 +114,7 @@ calcImpl = function (consumption, location, discountPrice, singleSoldPrice, sour
   }
 
   if (recoveryType == 'recoveryType_y') {
-    desList.push(`如果吃的非常多，返券超出预期返券数量，则按照15一张新50券进行回收(你把超出券也给我，我每张给你15)`);
+    desList.push(`如果吃的非常多，返券超出预期返券数量，则按照${config.cost/20}一张新50券进行回收(即你把超出预期的券也给我，我每张给你${config.cost/20})`);
   }
 
   var detail = "";
