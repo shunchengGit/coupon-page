@@ -1,8 +1,8 @@
 const config = {
-  cost: 260,
+  cost: 300,
   deposit: 400,
-  minProfit: 65,
-  defaultDiscountPrice: 520,
+  minProfit: 55,
+  defaultDiscountPrice: 600,
   singleSoldPrice:320,
 }
 
