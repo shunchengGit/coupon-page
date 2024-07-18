@@ -87,31 +87,19 @@ calcImpl = function (consumption, location, discountPrice, singleSoldPrice, sour
   var money = calcCost(couponCount, returnCoupon, discountPrice, location, priceType);
   let desList = null;
   const abstract = `点${consumption}元及以上的菜，用${couponCount}的券，收费${money}元`;
-  if (source === 'source_wechat') {
-    desList = [
-      `${abstract}。预期返券${returnCoupon}，微信渠道，无押金。`,
-      ``,
-      `[具体操作]`,
-      `1. 你把联系电话和地址发给我，我给你邮件${couponCount}券，你在收到我的券后给我转${money}元。`,
-      `2. 在你消费完成以后，通过快递把${returnCoupon}返券寄给我。联系人：程先生 联系方式：18600003671 邮寄地址：北京昌平回龙观流星花园3区35号楼快递柜。`,
-      ``,
-      `[注意事项]`,
-      `谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费。`,
-    ];
-  } else {
-    desList = [
-      `${abstract}。预期返券${returnCoupon}，押金${deposit}元。`,
-      ``,
-      `[具体操作]`,
-      `1. 首先，我在闲鱼建一个${couponCount}券，${money + deposit}元（收费${money}+押金${deposit}）。你拍下后我通过此订单把券寄给你。（邮寄地址和联系电话要填对）`,
-      `2. 同时，你在闲鱼建一个${returnCoupon}返券，${deposit}元（押金${deposit}返还）。我拍一下，你吃完后通过此订单把券返给我。（订单上有我的地址和电话）`,
-      `3. 最后，我收到你的返券，我们同时确认两笔交易。双向确保，十分安全。`,
-      ``,
-      `[注意事项]`,
-      `谁寄出谁支付邮费。如果你想自取或者闪送，不需要我邮寄，则我补贴你10元邮费`,
-      `返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导返券不会出错`,
-    ];
-  }
+
+  desList = [
+    `${abstract}。预期返券${returnCoupon}，押金${deposit}元。`,
+    ``,
+    `[具体操作]`,
+    `1. 首先，我在闲鱼建一个${couponCount}券，${money}元，你拍下；`,
+    `2. 其次，我在闲鱼建一个押金订单，${deposit}元，你拍下，确保你把新发的券给我；`,
+    `3. 吃饭时，到九十九毡房前台去拿${couponCount}的券；`,
+    `4. 消费后，把新发的券继续放到前台，确认交易，我退你押金。`,
+    ``,
+    `[注意事项]`,
+    `返券只接受新券，不接受旧券，如果新券少了，按照比例扣押金~正常按照我的指导返券不会出错`,
+  ];
 
   if (recoveryType == 'recoveryType_y') {
     desList.push(`如果吃的非常多，返券超出预期返券数量，则按照${config.cost/20}一张新50券进行回收(即你把超出预期的券也给我，我每张给你${config.cost/20})`);
